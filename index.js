@@ -14,9 +14,18 @@ const dbPort = 8889;
 const dbUsername = 'root';
 const dbPassword = 'root';
 
+var allowCrossDomain = function(req, res, next){
+    res.append('Access-Control-Allow-Origin', 'http://localhost:4200')
+    res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+    next()
+}
+
+
+
 app.get("/", (req, res) => res.send("Express API Milestone"))
 app.listen(port);
 app.use(bodyParser.json())
+app.use(allowCrossDomain)
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 app.get("/products", function (_req, res){
