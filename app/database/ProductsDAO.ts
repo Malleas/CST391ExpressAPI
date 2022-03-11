@@ -32,7 +32,7 @@ export class ProductsDAO{
                 connection.release();
                 if(err) throw err;
                 for(let i = 0; i<rows.length; i++){
-                    products.push(new Product(rows[i].ID, rows[i].PRODUCT_NAME, rows[i].PRODUCT_DESCRIPTION, rows[i].PRODUCT_PRICE, rows[i].PRODUCT_QUANTITY))
+                    products.push(new Product(rows[i].PRODUCT_ID, rows[i].PRODUCT_NAME, rows[i].PRODUCT_DESCRIPTION, rows[i].PRODUCT_PRICE, rows[i].PRODUCT_QUANTITY))
                 }
                 callback(products)
             })
@@ -91,7 +91,7 @@ export class ProductsDAO{
             if(err) throw err;
             connection.release();
             connection.query = util.promisify(connection.query)
-            if(connection.query('DELETE FROM 391MILESTONE.PRODUCT WHERE ID = ?', [id])){
+            if(connection.query('DELETE FROM 391MILESTONE.PRODUCT WHERE PRODUCT_ID = ?', [id])){
                 status = 1;
             }else {
                 status = -1;

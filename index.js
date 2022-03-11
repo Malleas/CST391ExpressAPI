@@ -7,25 +7,29 @@ const {Product} = require("./lib/app/models/Product");
 const {UsersDAO} = require("./lib/app/database/UsersDAO");
 const {User} = require("./lib/app/models/User");
 const app = express();
-const port = 3000;
+const port = 3100;
 
 const dbHost = 'localhost';
 const dbPort = 8889;
 const dbUsername = 'root';
 const dbPassword = 'root';
 
-var allowCrossDomain = function(req, res, next){
-    res.append('Access-Control-Allow-Origin', 'http://localhost:4200')
-    res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+app.use(function (req, res, next){
+    res.header("Access-Control-Allow-Origin", "*")
+    res.header("Access-Control-Allow-Methods", "GET,DELETE,HEAD,OPTIONS,POST,PUT")
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, " +
+        "Content-Type, " +
+        "Accept, " +
+        "x-client-key," +
+        "x-client-token," +
+        "x-client-secret," +
+        "Authorization")
     next()
-}
-
-
+})
 
 app.get("/", (req, res) => res.send("Express API Milestone"))
 app.listen(port);
 app.use(bodyParser.json())
-app.use(allowCrossDomain)
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 app.get("/products", function (_req, res){
@@ -50,7 +54,7 @@ app.get("/products/:id", function (_req, res){
     })
 })
 
-app.post("/product", function (_req, res){
+app.post("/products", function (_req, res){
     let dao = new ProductsDAO(dbHost, dbPort, dbUsername,dbPassword)
     let product = new Product(_req.body.productName, _req.body.productDescription, _req.body.productPrice, _req.body.productQuantity);
     dao.createProduct(product, function (status){
@@ -62,7 +66,7 @@ app.post("/product", function (_req, res){
     })
 })
 
-app.post("/product/:id", function (_req, res){
+app.post("/products/:id", function (_req, res){
     let dao = new ProductsDAO(dbHost, dbPort, dbUsername,dbPassword)
     let product = new Product(_req.body.productName, _req.body.productDescription, _req.body.productPrice, _req.body.productQuantity);
     dao.updateProduct(product, _req.params.id, function (status){
@@ -74,7 +78,7 @@ app.post("/product/:id", function (_req, res){
     })
 })
 
-app.delete("/product/:id", function (_req, res){
+app.delete("/products/:id", function (_req, res){
     let dao = new ProductsDAO(dbHost, dbPort, dbUsername,dbPassword)
     dao.deleteProduct(_req.params.id, function (status){
         if(status === 1){
